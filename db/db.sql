@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `tb_addresses` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE INDEX `fk_addresses_persons_idx` ON `tb_addresses` (`idperson` ASC) VISIBLE;
+CREATE INDEX `fk_addresses_persons_idx` ON `tb_addresses` (`idperson` ASC);
 
 
 -- -----------------------------------------------------
@@ -86,7 +86,7 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
-CREATE INDEX `FK_users_persons_idx` ON `tb_users` (`idperson` ASC) VISIBLE;
+CREATE INDEX `FK_users_persons_idx` ON `tb_users` (`idperson` ASC);
 
 
 -- -----------------------------------------------------
@@ -115,9 +115,9 @@ CREATE TABLE IF NOT EXISTS `tb_carts` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE INDEX `FK_carts_users_idx` ON `tb_carts` (`iduser` ASC) VISIBLE;
+CREATE INDEX `FK_carts_users_idx` ON `tb_carts` (`iduser` ASC);
 
-CREATE INDEX `fk_carts_addresses_idx` ON `tb_carts` (`idaddress` ASC) VISIBLE;
+CREATE INDEX `fk_carts_addresses_idx` ON `tb_carts` (`idaddress` ASC);
 
 
 -- -----------------------------------------------------
@@ -165,9 +165,9 @@ CREATE TABLE IF NOT EXISTS `tb_cartsproducts` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE INDEX `FK_cartsproducts_carts_idx` ON `tb_cartsproducts` (`idcart` ASC) VISIBLE;
+CREATE INDEX `FK_cartsproducts_carts_idx` ON `tb_cartsproducts` (`idcart` ASC);
 
-CREATE INDEX `FK_cartsproducts_products_idx` ON `tb_cartsproducts` (`idproduct` ASC) VISIBLE;
+CREATE INDEX `FK_cartsproducts_products_idx` ON `tb_cartsproducts` (`idproduct` ASC);
 
 
 -- -----------------------------------------------------
@@ -230,11 +230,11 @@ CREATE TABLE IF NOT EXISTS `tb_orders` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE INDEX `FK_orders_carts_idx` ON `tb_orders` (`idcart` ASC) VISIBLE;
+CREATE INDEX `FK_orders_carts_idx` ON `tb_orders` (`idcart` ASC);
 
-CREATE INDEX `FK_orders_users_idx` ON `tb_orders` (`iduser` ASC) VISIBLE;
+CREATE INDEX `FK_orders_users_idx` ON `tb_orders` (`iduser` ASC);
 
-CREATE INDEX `fk_orders_ordersstatus_idx` ON `tb_orders` (`idstatus` ASC) VISIBLE;
+CREATE INDEX `fk_orders_ordersstatus_idx` ON `tb_orders` (`idstatus` ASC);
 
 
 -- -----------------------------------------------------
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `tb_productscategories` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE INDEX `fk_productscategories_products_idx` ON `tb_productscategories` (`idproduct` ASC) VISIBLE;
+CREATE INDEX `fk_productscategories_products_idx` ON `tb_productscategories` (`idproduct` ASC);
 
 
 -- -----------------------------------------------------
@@ -285,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `tb_userslogs` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE INDEX `fk_userslogs_users_idx` ON `tb_userslogs` (`iduser` ASC) VISIBLE;
+CREATE INDEX `fk_userslogs_users_idx` ON `tb_userslogs` (`iduser` ASC);
 
 
 -- -----------------------------------------------------
@@ -308,9 +308,119 @@ CREATE TABLE IF NOT EXISTS `tb_userspasswordsrecoveries` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE INDEX `fk_userspasswordsrecoveries_users_idx` ON `tb_userspasswordsrecoveries` (`iduser` ASC) VISIBLE;
+CREATE INDEX `fk_userspasswordsrecoveries_users_idx` ON `tb_userspasswordsrecoveries` (`iduser` ASC);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+
+
+INSERT INTO `db_ecommerce`.`tb_persons` VALUES (1,'JoÃ£o Rangel','admin@hcode.com.br',2147483647,'2017-03-01 03:00:00'),(7,'Suporte','suporte@hcode.com.br',1112345678,'2017-03-15 16:10:27');
+
+INSERT INTO `db_ecommerce`.`tb_users` VALUES (1,1,'admin','$2y$12$YlooCyNvyTji8bPRcrfNfOKnVMmZA9ViM2A3IpFjmrpIbp5ovNmga',1,'2017-03-13 03:00:00'),(7,7,'suporte','$2y$12$HFjgUm/mk1RzTy4ZkJaZBe0Mc/BA2hQyoUckvm.lFa6TesjtNpiMe',1,'2017-03-15 16:10:27');
+
+INSERT INTO `db_ecommerce`.`tb_products` VALUES (1,'Smartphone Android 7.0',999.95,75.00,151.00,80.00,167.00,'smartphone-android-7.0','2017-03-13 03:00:00'),(2,'SmartTV LED 4K',3925.99,917.00,596.00,288.00,8600.00,'smarttv-led-4k','2017-03-13 03:00:00'),(3,'Notebook 14\" 4GB 1TB',1949.99,345.00,23.00,30.00,2000.00,'notebook-14-4gb-1tb','2017-03-13 03:00:00');
+
+INSERT INTO `db_ecommerce`.`tb_ordersstatus` VALUES (1,'Em Aberto','2017-03-13 03:00:00'),(2,'Aguardando Pagamento','2017-03-13 03:00:00'),(3,'Pago','2017-03-13 03:00:00'),(4,'Entregue','2017-03-13 03:00:00');
+
+INSERT INTO `db_ecommerce`.`tb_userspasswordsrecoveries` VALUES (1,7,'127.0.0.1',NULL,'2017-03-15 16:10:59'),(2,7,'127.0.0.1','2017-03-15 13:33:45','2017-03-15 16:11:18'),(3,7,'127.0.0.1','2017-03-15 13:37:35','2017-03-15 16:37:12');
+
+DELIMITER ;;
+CREATE PROCEDURE `db_ecommerce`.`sp_userspasswordsrecoveries_create`(
+piduser INT,
+pdesip VARCHAR(45)
+)
+BEGIN
+  
+  INSERT INTO tb_userspasswordsrecoveries (iduser, desip)
+    VALUES(piduser, pdesip);
+    
+    SELECT * FROM tb_userspasswordsrecoveries
+    WHERE idrecovery = LAST_INSERT_ID();
+    
+END ;;
+DELIMITER ;
+
+DELIMITER ;;
+CREATE PROCEDURE `db_ecommerce`.`sp_usersupdate_save`(
+piduser INT,
+pdesperson VARCHAR(64), 
+pdeslogin VARCHAR(64), 
+pdespassword VARCHAR(256), 
+pdesemail VARCHAR(128), 
+pnrphone BIGINT, 
+pinadmin TINYINT
+)
+BEGIN
+  
+    DECLARE vidperson INT;
+    
+  SELECT idperson INTO vidperson
+    FROM tb_users
+    WHERE iduser = piduser;
+    
+    UPDATE tb_persons
+    SET 
+    desperson = pdesperson,
+        desemail = pdesemail,
+        nrphone = pnrphone
+  WHERE idperson = vidperson;
+    
+    UPDATE tb_users
+    SET
+    deslogin = pdeslogin,
+        despassword = pdespassword,
+        inadmin = pinadmin
+  WHERE iduser = piduser;
+    
+    SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) WHERE a.iduser = piduser;
+    
+END ;;
+DELIMITER ;
+
+DELIMITER ;;
+CREATE PROCEDURE `db_ecommerce`.`sp_users_delete`(
+piduser INT
+)
+BEGIN
+  
+    DECLARE vidperson INT;
+    
+  SELECT idperson INTO vidperson
+    FROM tb_users
+    WHERE iduser = piduser;
+    
+    DELETE FROM tb_users WHERE iduser = piduser;
+    DELETE FROM tb_persons WHERE idperson = vidperson;
+    
+END ;;
+DELIMITER ;
+
+DELIMITER ;;
+CREATE PROCEDURE `db_ecommerce`.`sp_users_save`(
+pdesperson VARCHAR(64), 
+pdeslogin VARCHAR(64), 
+pdespassword VARCHAR(256), 
+pdesemail VARCHAR(128), 
+pnrphone BIGINT, 
+pinadmin TINYINT
+)
+BEGIN
+  
+    DECLARE vidperson INT;
+    
+  INSERT INTO tb_persons (desperson, desemail, nrphone)
+    VALUES(pdesperson, pdesemail, pnrphone);
+    
+    SET vidperson = LAST_INSERT_ID();
+    
+    INSERT INTO tb_users (idperson, deslogin, despassword, inadmin)
+    VALUES(vidperson, pdeslogin, pdespassword, pinadmin);
+    
+    SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) WHERE a.iduser = LAST_INSERT_ID();
+    
+END ;;
+DELIMITER ;
